@@ -13,7 +13,6 @@ import retrofit2.http.Part;
 public interface DocumentoAlmacenadoApi {
     String base = "api/documento-almacenado";
     @Multipart
-    @POST
-    Call<GenericResponse<DocumentoAlmacenado>> save(@Part MultipartBody.Part file,
-                                                    @Part("nombre")RequestBody requestBody);
+    @POST(base)
+    Call<GenericResponse<DocumentoAlmacenado>> save(@Part MultipartBody.Part file, @Part("nombre") RequestBody requestBody);
 }

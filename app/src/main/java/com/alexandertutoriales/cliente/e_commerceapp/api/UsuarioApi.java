@@ -18,6 +18,6 @@ public interface UsuarioApi {
     @POST(base + "/login")
     Call<GenericResponse<Usuario>> login(@Field("email") String email, @Field("pass") String contrasenia);
 
-    @POST
+    @POST(base)
     Call<GenericResponse<Usuario>> save (@Body Usuario u);
 }
