@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.content.Intent;
@@ -16,23 +17,37 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.alexandertutoriales.cliente.e_commerceapp.R;
+import com.alexandertutoriales.cliente.e_commerceapp.entity.service.Cliente;
+import com.alexandertutoriales.cliente.e_commerceapp.entity.service.DocumentoAlmacenado;
+import com.alexandertutoriales.cliente.e_commerceapp.entity.service.Usuario;
+import com.alexandertutoriales.cliente.e_commerceapp.viewmodel.ClienteViewModel;
+import com.alexandertutoriales.cliente.e_commerceapp.viewmodel.DocumentoAlmacenadoViewModel;
+import com.alexandertutoriales.cliente.e_commerceapp.viewmodel.UsuarioViewModel;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.time.LocalDateTime;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class RegistrarUsuarioActivity extends AppCompatActivity {
     private File f;
+    private ClienteViewModel clienteViewModel;
+    private UsuarioViewModel usuarioViewModel;
+    private DocumentoAlmacenadoViewModel documentoAlmacenadoViewModel;
     private Button btnSubirImagen, btnGuardarDatos;
     private CircleImageView imageUser;
     private AutoCompleteTextView dropdownTipoDoc, dropdownDepartamento, dropdownProvincia, dropdownDistrito;
@@ -48,6 +63,35 @@ public class RegistrarUsuarioActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrar_usuario);
         this.init();
+        this.initViewModel();
+        this.spinners();
+    }
+
+    private void spinners() {
+        //LISTA DE TIPOS DE DOCUMENTOS
+        String[] tipoDoc = getResources().getStringArray(R.array.tipoDoc);
+        ArrayAdapter arrayTipoDoc = new ArrayAdapter(this, R.layout.dropdown_item, tipoDoc);
+        dropdownTipoDoc.setAdapter(arrayTipoDoc);
+        //LISTA DE DEPARTAMENTOS
+        String[] departamentos = getResources().getStringArray(R.array.departamentos);
+        ArrayAdapter arrayDepartamentos = new ArrayAdapter(this, R.layout.dropdown_item, departamentos);
+        dropdownDepartamento.setAdapter(arrayDepartamentos);
+        //LISTA DE PROVINCIAS
+        String[] provincias = getResources().getStringArray(R.array.provincias);
+        ArrayAdapter arrayProvincias = new ArrayAdapter(this, R.layout.dropdown_item, provincias);
+        dropdownProvincia.setAdapter(arrayProvincias);
+        //LISTA DE DISTRITOS
+        String[] distritos = getResources().getStringArray(R.array.distritos);
+        ArrayAdapter arrayDistritos = new ArrayAdapter(this, R.layout.dropdown_item, distritos);
+        dropdownDistrito.setAdapter(arrayDistritos);
+
+    }
+
+    private void initViewModel() {
+        final ViewModelProvider vmp = new ViewModelProvider(this);
+        this.clienteViewModel = vmp.get(ClienteViewModel.class);
+        this.usuarioViewModel = vmp.get(UsuarioViewModel.class);
+        this.documentoAlmacenadoViewModel = vmp.get(DocumentoAlmacenadoViewModel.class);
     }
 
     @Override
@@ -107,7 +151,10 @@ public class RegistrarUsuarioActivity extends AppCompatActivity {
         txtInputEmailUser = findViewById(R.id.txtInputEmailUser);
         txtInputPasswordUser = findViewById(R.id.txtInputPasswordUser);
         btnSubirImagen.setOnClickListener(v -> {
-            cargarImagen();
+            this.cargarImagen();
+        });
+        btnGuardarDatos.setOnClickListener(v -> {
+            this.guardarDatos();
         });
         ///ONCHANGE LISTENEER A LOS EDITEXT
         edtNameUser.addTextChangedListener(new TextWatcher() {
@@ -272,6 +319,67 @@ public class RegistrarUsuarioActivity extends AppCompatActivity {
         });
     }
 
+    private void guardarDatos() {
+        Cliente c;
+        if (validar()) {
+            c = new Cliente();
+            try {
+                c.setNombres(edtNameUser.getText().toString());
+                c.setApellidoPaterno(edtApellidoPaternoU.getText().toString());
+                c.setApellidoMaterno(edtApellidoMaternoU.getText().toString());
+                c.setTipoDoc(dropdownTipoDoc.getText().toString());
+                c.setNumDoc(edtNumDocU.getText().toString());
+                c.setDepartamento(dropdownDepartamento.getText().toString());
+                c.setProvincia(dropdownProvincia.getText().toString());
+                c.setDistrito(dropdownDistrito.getText().toString());
+                c.setTelefono(edtTelefonoU.getText().toString());
+                c.setDireccionEnvio(edtDireccionU.getText().toString());
+                c.setId(0);
+                LocalDateTime ldt = LocalDateTime.now(); //Para generar el nombre al archivo en base a la fecha, hora, año
+                RequestBody rb = RequestBody.create(f, MediaType.parse("multipart/form-data")), somedata; //Le estamos enviando un archivo (imagen) desde el formulario
+                String filename = "" + ldt.getDayOfMonth() + (ldt.getMonthValue() + 1) +
+                        ldt.getYear() + ldt.getHour()
+                        + ldt.getMinute() + ldt.getSecond(); //Asignar un nombre al archivo (imagen)
+                MultipartBody.Part part = MultipartBody.Part.createFormData("file", f.getName(), rb);
+                somedata = RequestBody.create("profilePh" + filename, MediaType.parse("text/plain")); //Le estamos enviando un nombre al archivo.
+                this.documentoAlmacenadoViewModel.save(part, somedata).observe(this, response -> {
+                    if (response.getRpta() == 1) {
+                        c.setFoto(new DocumentoAlmacenado());
+                        c.getFoto().setId(response.getBody().getId());//Asignamos la foto al cliente
+                        this.clienteViewModel.guardarCliente(c).observe(this, cResponse -> {
+                            if (cResponse.getRpta() == 1) {
+                                Toast.makeText(this, response.getMessage() + ", ahora procederemos a registrar sus credenciales.", Toast.LENGTH_SHORT).show();
+                                int idc = cResponse.getBody().getId();//Obtener el id del cliente.
+                                Usuario u = new Usuario();
+                                u.setEmail(edtEmailUser.getText().toString());
+                                u.setClave(edtPasswordUser.getText().toString());
+                                u.setVigencia(true);
+                                u.setCliente(new Cliente(idc));
+                                this.usuarioViewModel.save(u).observe(this, uResponse -> {
+                                    Toast.makeText(this, uResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                                    if (uResponse.getRpta() == 1) {
+                                        Toast.makeText(this, "Sus Datos y credenciales fueron creados correctamente", Toast.LENGTH_SHORT).show();
+                                        this.finish();
+                                    } else {
+                                        Toast.makeText(this, "No se pudo guardar los datos, intentelo de nuevo", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(this, "No se ha podido guardar los datos, intentelo de nuevo", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        Toast.makeText(this, "No se ha podido guardar los datos, intentelo de nuevo", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (Exception e) {
+                warningMessage("Se ha producido un error : " + e.getMessage());
+            }
+        } else {
+            errorMessage("Por favor, complete todos los campos del formulario");
+        }
+    }
+
     private void cargarImagen() {
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         i.setType("image/");
@@ -281,7 +389,7 @@ public class RegistrarUsuarioActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK){
+        if (resultCode == RESULT_OK) {
             Uri uri = data.getData();
             final String realPath = getRealPathFromURI(uri);
             this.f = new File(realPath);
@@ -292,9 +400,9 @@ public class RegistrarUsuarioActivity extends AppCompatActivity {
     private String getRealPathFromURI(Uri contentUri) {
         String result;
         Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
-        if(cursor == null){
+        if (cursor == null) {
             result = contentUri.getPath();
-        }else{
+        } else {
             cursor.moveToFirst();
             int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
             result = cursor.getString(idx);

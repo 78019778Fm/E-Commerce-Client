@@ -12,8 +12,15 @@ public class Cliente {
     private String departamento;
     private String provincia;
     private String distrito;
+    private String telefono;
     private DocumentoAlmacenado foto;
 
+    public Cliente() {
+    }
+
+    public Cliente(int id) {
+        this.id = id;
+    }
 
     public int getId() {
         return id;
@@ -101,5 +108,13 @@ public class Cliente {
 
     public void setApellidoMaterno(String apellidoMaterno) {
         this.apellidoMaterno = apellidoMaterno;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 }
