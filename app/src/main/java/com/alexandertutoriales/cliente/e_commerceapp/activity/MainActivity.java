@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnIniciarSesion;
     private UsuarioViewModel viewModel;
     private TextInputLayout txtInputUsuario, txtInputPassword;
+    private TextView txtNuevoUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         edtPassword = findViewById(R.id.edtPassword);
         txtInputUsuario = findViewById(R.id.txtInputUsuario);
         txtInputPassword = findViewById(R.id.txtInputPassword);
+        txtNuevoUsuario = findViewById(R.id.txtNuevoUsuario);
         btnIniciarSesion = findViewById(R.id.btnIniciarSesion);
         btnIniciarSesion.setOnClickListener(v -> {
             try {
@@ -86,6 +88,11 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 toastIncorrecto("Se ha producido un error al intentar loguearte : " + e.getMessage());
             }
+        });
+        txtNuevoUsuario.setOnClickListener(v -> {
+            Intent i = new Intent(this, RegistrarUsuarioActivity.class);
+            startActivity(i);
+            overridePendingTransition(R.anim.left_in, R.anim.left_out);
         });
         edtMail.addTextChangedListener(new TextWatcher() {
             @Override

@@ -111,11 +111,13 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/txtNuevoUsuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/san_francisco"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:textColor="@color/purple_500"
             android:gravity="center|center_horizontal"
             android:text="@string/label_nuevoUser"/>
     </LinearLayout>
