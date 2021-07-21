@@ -16,11 +16,15 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alexandertutoriales.cliente.e_commerceapp.R;
@@ -348,7 +352,8 @@ public class RegistrarUsuarioActivity extends AppCompatActivity {
                         c.getFoto().setId(response.getBody().getId());//Asignamos la foto al cliente
                         this.clienteViewModel.guardarCliente(c).observe(this, cResponse -> {
                             if (cResponse.getRpta() == 1) {
-                                Toast.makeText(this, response.getMessage() + ", ahora procederemos a registrar sus credenciales.", Toast.LENGTH_SHORT).show();
+                                //Si gustan pueden mostrar este mensaje.
+                                //Toast.makeText(this, response.getMessage() + ", ahora procederemos a registrar sus credenciales.", Toast.LENGTH_SHORT).show();
                                 int idc = cResponse.getBody().getId();//Obtener el id del cliente.
                                 Usuario u = new Usuario();
                                 u.setEmail(edtEmailUser.getText().toString());
@@ -358,18 +363,19 @@ public class RegistrarUsuarioActivity extends AppCompatActivity {
                                 this.usuarioViewModel.save(u).observe(this, uResponse -> {
                                     Toast.makeText(this, uResponse.getMessage(), Toast.LENGTH_SHORT).show();
                                     if (uResponse.getRpta() == 1) {
-                                        Toast.makeText(this, "Sus Datos y credenciales fueron creados correctamente", Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(this, "Sus Datos y credenciales fueron creados correctamente", Toast.LENGTH_SHORT).show();
+                                        successMessage("Estupendo! " + "Su información ha sido guardada con éxito en el sistema.");
                                         this.finish();
                                     } else {
-                                        Toast.makeText(this, "No se pudo guardar los datos, intentelo de nuevo", Toast.LENGTH_SHORT).show();
+                                        toastIncorrecto("No se ha podido guardar los datos, intentelo de nuevo");
                                     }
                                 });
                             } else {
-                                Toast.makeText(this, "No se ha podido guardar los datos, intentelo de nuevo", Toast.LENGTH_SHORT).show();
+                                toastIncorrecto("No se ha podido guardar los datos, intentelo de nuevo");
                             }
                         });
                     } else {
-                        Toast.makeText(this, "No se ha podido guardar los datos, intentelo de nuevo", Toast.LENGTH_SHORT).show();
+                        toastIncorrecto("No se ha podido guardar los datos, intentelo de nuevo");
                     }
                 });
             } catch (Exception e) {
@@ -521,5 +527,17 @@ public class RegistrarUsuarioActivity extends AppCompatActivity {
         new SweetAlertDialog(this,
                 SweetAlertDialog.WARNING_TYPE).setTitleText("Notificación del Sistema")
                 .setContentText(message).setConfirmText("Ok").show();
+    }
+    public void toastIncorrecto(String msg) {
+        LayoutInflater layoutInflater = getLayoutInflater();
+        View view = layoutInflater.inflate(R.layout.custom_toast_error, (ViewGroup) findViewById(R.id.ll_custom_toast_error));
+        TextView txtMensaje = view.findViewById(R.id.txtMensajeToast2);
+        txtMensaje.setText(msg);
+
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.BOTTOM, 0, 200);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(view);
+        toast.show();
     }
 }
