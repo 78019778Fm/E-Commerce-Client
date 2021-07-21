@@ -117,4 +117,9 @@ public class Cliente {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
+
+    public String getNombreCompleto(){
+        return this.nombres != null && this.apellidoPaterno != null && this.apellidoMaterno != null ?
+                this.nombres + " " + this.apellidoPaterno + " " + this.apellidoMaterno : "------";
+    }
 }

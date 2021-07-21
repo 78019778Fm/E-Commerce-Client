@@ -31,6 +31,8 @@ import com.google.gson.reflect.TypeToken;
 import java.sql.Date;
 import java.sql.Time;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText edtMail, edtPassword;
@@ -173,5 +175,33 @@ public class MainActivity extends AppCompatActivity {
             txtInputPassword.setErrorEnabled(false);
         }
         return retorno;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String pref = preferences.getString("UsuarioJson", "");
+        if(!pref.equals("")){
+            toastCorrecto("Se detecto una sesión activa, el login será omitido!");
+            this.startActivity(new Intent(this, InicioActivity.class));
+            this.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE).setTitleText("has oprimido el botón atrás")
+                .setContentText("¿Quieres cerrar la aplicación?")
+                .setCancelText("No, Cancelar!").setConfirmText("Sí, Cerrar")
+                .showCancelButton(true).setCancelClickListener(sDialog -> {
+            sDialog.dismissWithAnimation();
+            new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE).setTitleText("Operación cancelada")
+                    .setContentText("No saliste de la app")
+                    .show();
+        }).setConfirmClickListener(sweetAlertDialog -> {
+            sweetAlertDialog.dismissWithAnimation();
+            System.exit(0);
+        }).show();
     }
 }
