@@ -15,12 +15,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ECommerceApp">
-        <activity android:name=".activity.RegistrarUsuarioActivity"></activity>
+        android:theme="@style/Theme.ECommerceApp"
+        android:hardwareAccelerated="true"
+        android:usesCleartextTraffic="true"><!--Para permitir que la aplicación ejecute solicitudes http, ya que por
+        defecto es https-->
+        <activity android:name=".activity.RegistrarUsuarioActivity"/>
         <activity
             android:name=".activity.InicioActivity"
             android:label="@string/title_activity_inicio"
-            android:theme="@style/Theme.ECommerceApp.NoActionBar"></activity>
+            android:theme="@style/Theme.ECommerceApp.NoActionBar"/>
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
