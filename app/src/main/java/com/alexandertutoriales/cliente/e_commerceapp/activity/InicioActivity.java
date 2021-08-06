@@ -106,7 +106,7 @@ public class InicioActivity extends AppCompatActivity {
             final CircleImageView imgFoto = vistaHeader.findViewById(R.id.imgFotoPerfil);
             tvNombre.setText(u.getCliente().getNombreCompleto());
             tvCorreo.setText(u.getEmail());
-            String url = ConfigApi.ipAlexander + "/api/documento-almacenado/download/" + u.getCliente().getFoto().getFileName();
+            String url = ConfigApi.baseUrlE + "/api/documento-almacenado/download/" + u.getCliente().getFoto().getFileName();
             final Picasso picasso = new Picasso.Builder(this)
                     .downloader(new OkHttp3Downloader(ConfigApi.getClient()))
                     .build();

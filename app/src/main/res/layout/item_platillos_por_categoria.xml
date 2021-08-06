@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.google.android.material.card.MaterialCardView
+        app:cardCornerRadius="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:elevation="5dp">
+
+        <ImageView
+            android:id="@+id/imgPlatilloC"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/food_img3" />
+
+        <RelativeLayout
+            android:layout_width="270dp"
+            android:layout_height="110dp"
+            android:layout_gravity="end"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/namePlatilloC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/san_francisco"
+                android:text="Seco De Cabrito"
+                android:textColor="#000"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/iv1"
+                android:layout_width="120dp"
+                android:layout_height="18dp"
+                android:layout_below="@id/namePlatilloC"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/rating_orange_small" />
+
+            <TextView
+                android:id="@+id/txtPricePlatilloC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv1"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/san_francisco"
+                android:text="S/. 18.00"
+                android:textColor="#000"
+                android:textSize="16dp" />
+
+            <Button
+                android:id="@+id/btnOrdenarPC"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:backgroundTint="#FF8500"
+                android:fontFamily="@font/san_francisco"
+                android:text="Ordenar"
+                android:textColor="#fff"
+                android:textSize="11dp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

@@ -25,6 +25,8 @@ public class ConfigApi {
     private static UsuarioApi usuarioApi;
     private static ClienteApi clienteApi;
     private static DocumentoAlmacenadoApi documentoAlmacenadoApi;
+    private static CategoriaApi categoriaApi;
+    private static PlatilloApi platilloApi;
 
     static {
         initClient();
@@ -36,7 +38,7 @@ public class ConfigApi {
                 .registerTypeAdapter(Time.class, new TimeSerializer())
                 .create();
         retrofit = new Retrofit.Builder()
-                .baseUrl(ipAlexander)//Si quieren ejecutar la app desde su móvil, cambiar aquí con la ip de su ordenador
+                .baseUrl(baseUrlE)//Si quieren ejecutar la app desde su móvil, cambiar aquí con la ip de su ordenador
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(getClient())
                 .build();
@@ -58,29 +60,43 @@ public class ConfigApi {
         return builder.build();
     }
 
-    public static void setToken(String value){
+    public static void setToken(String value) {
         token = value;
         initClient();
     }
 
-    public static UsuarioApi getUsuarioApi(){
-        if(usuarioApi == null){
+    public static UsuarioApi getUsuarioApi() {
+        if (usuarioApi == null) {
             usuarioApi = retrofit.create(UsuarioApi.class);
         }
         return usuarioApi;
     }
 
-    public static ClienteApi getClienteApi(){
-        if(clienteApi == null){
+    public static ClienteApi getClienteApi() {
+        if (clienteApi == null) {
             clienteApi = retrofit.create(ClienteApi.class);
         }
         return clienteApi;
     }
 
-    public static DocumentoAlmacenadoApi getDocumentoAlmacenadoApi(){
-        if(documentoAlmacenadoApi == null){
+    public static DocumentoAlmacenadoApi getDocumentoAlmacenadoApi() {
+        if (documentoAlmacenadoApi == null) {
             documentoAlmacenadoApi = retrofit.create(DocumentoAlmacenadoApi.class);
         }
         return documentoAlmacenadoApi;
+    }
+
+    public static CategoriaApi getCategoriaApi() {
+        if (categoriaApi == null) {
+            categoriaApi = retrofit.create(CategoriaApi.class);
+        }
+        return categoriaApi;
+    }
+
+    public static PlatilloApi getPlatilloApi() {
+        if (platilloApi == null) {
+            platilloApi = retrofit.create(PlatilloApi.class);
+        }
+        return platilloApi;
     }
 }

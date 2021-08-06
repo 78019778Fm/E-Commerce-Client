@@ -5,14 +5,23 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexandertutoriales.cliente.e_commerceapp.R;
+import com.alexandertutoriales.cliente.e_commerceapp.adapter.CategoriaAdapter;
+import com.alexandertutoriales.cliente.e_commerceapp.adapter.PlatillosRecomendadosAdapter;
 import com.alexandertutoriales.cliente.e_commerceapp.adapter.SliderAdapter;
 import com.alexandertutoriales.cliente.e_commerceapp.entity.SliderItem;
+import com.alexandertutoriales.cliente.e_commerceapp.entity.service.Platillo;
+import com.alexandertutoriales.cliente.e_commerceapp.viewmodel.CategoriaViewModel;
+import com.alexandertutoriales.cliente.e_commerceapp.viewmodel.PlatilloViewModel;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
@@ -24,7 +33,13 @@ import java.util.List;
 
 
 public class InicioFragment extends Fragment {
-
+    private CategoriaViewModel categoriaViewModel;
+    private PlatilloViewModel platilloViewModel;
+    private RecyclerView rcvPlatillosRecomendados;
+    private PlatillosRecomendadosAdapter adapter;
+    private List<Platillo> platillos = new ArrayList<>();
+    private GridView gvCategorias;
+    private CategoriaAdapter categoriaAdapter;
     private SliderView svCarrusel;
     private SliderAdapter sliderAdapter;
 
@@ -43,8 +58,18 @@ public class InicioFragment extends Fragment {
 
     private void init(View v){
         svCarrusel = v.findViewById(R.id.svCarrusel);
+        ViewModelProvider vmp = new ViewModelProvider(this);
+        //Categorías
+        categoriaViewModel = vmp.get(CategoriaViewModel.class);
+        gvCategorias = v.findViewById(R.id.gvCategorias);
+        //Platillos
+        rcvPlatillosRecomendados = v.findViewById(R.id.rcvPlatillosRecomendados);
+        rcvPlatillosRecomendados.setLayoutManager(new GridLayoutManager(getContext(), 1));
+        platilloViewModel = vmp.get(PlatilloViewModel.class);
+
     }
     private void initAdapter() {
+        //Carrusel de Imágenes
         sliderAdapter = new SliderAdapter(getContext());
         svCarrusel.setSliderAdapter(sliderAdapter);
         svCarrusel.setIndicatorAnimation(IndicatorAnimationType.WORM); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
@@ -54,6 +79,12 @@ public class InicioFragment extends Fragment {
         svCarrusel.setIndicatorUnselectedColor(Color.GRAY);
         svCarrusel.setScrollTimeInSec(4); //set scroll delay in seconds :
         svCarrusel.startAutoCycle();
+        //Categorías
+        categoriaAdapter = new CategoriaAdapter(getContext(), R.layout.item_categorias, new ArrayList<>());
+        gvCategorias.setAdapter(categoriaAdapter);
+        //Platillos
+        adapter = new PlatillosRecomendadosAdapter(platillos);
+        rcvPlatillosRecomendados.setAdapter(adapter);
     }
     private void loadData() {
 
@@ -63,6 +94,19 @@ public class InicioFragment extends Fragment {
         lista.add(new SliderItem(R.drawable.postres_muysabrosos, "Los Mejores Postres"));
         lista.add(new SliderItem(R.drawable.peru_postres, "Los Mejores Postres"));
         sliderAdapter.updateItem(lista);
+        categoriaViewModel.listarCategoriasActivas().observe(getViewLifecycleOwner(), response -> {
+            if(response.getRpta() == 1){
+                categoriaAdapter.clear();
+                categoriaAdapter.addAll(response.getBody());
+                categoriaAdapter.notifyDataSetChanged();
+            }else{
+                System.out.println("Error al obtener las categorías activas");
+            }
+        });
+        platilloViewModel.listarPlatillosRecomendados().observe(getViewLifecycleOwner(), response -> {
+            adapter.updateItems(response.getBody());
+        });
+
     }
 
 
