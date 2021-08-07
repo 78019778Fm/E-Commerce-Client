@@ -3,9 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/USER/Desktop/Youtube-Project-E-Commerce/AppCliente/app/src/main/res/layout/activity_detalle_mis_compras.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/USER/Desktop/Youtube-Project-E-Commerce/AppCliente/app/src/main/res/layout/activity_listar_platillos_por_categoria.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/USER/Desktop/Youtube-Project-E-Commerce/AppCliente/app/src/main/res/layout/fragment_inicio.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/USER/Desktop/Youtube-Project-E-Commerce/AppCliente/app/src/main/res/layout/fragment_mis_compras.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/USER/Desktop/Youtube-Project-E-Commerce/AppCliente/app/src/main/res/layout/item_categorias.xml" value="0.25" />
+        <entry key="..\:/Users/USER/Desktop/Youtube-Project-E-Commerce/AppCliente/app/src/main/res/layout/item_detalle_mis_compras.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/USER/Desktop/Youtube-Project-E-Commerce/AppCliente/app/src/main/res/layout/item_mis_compras.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/USER/Desktop/Youtube-Project-E-Commerce/AppCliente/app/src/main/res/layout/item_platillos.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/USER/Desktop/Youtube-Project-E-Commerce/AppCliente/app/src/main/res/layout/item_platillos_por_categoria.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/USER/Desktop/Youtube-Project-E-Commerce/AppCliente/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1125" />
