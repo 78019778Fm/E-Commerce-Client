@@ -13,10 +13,15 @@
     <string name="nav_header_subtitle">afuentes@live.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Cerrar Sesión</string>
+    <string name="descripcion_platillo">Esta rica ensalada norteña viene acompañada con su rica
+        lechuga, tomates, cebollas, choclos fresca, además incluye su buen refrescos para acompañar este exquisito
+        platillo preparado por nuestros grandes chef norteños del Perú.</string>
 
     <string name="menu_home">Inicio</string>
     <string name="menu_gallery">Mis Compras</string>
     <string name="menu_slideshow">Configuración</string>
+    <string name="add_shop">Añadir al Carrito</string>
+    <string name="comprar_p">Comprar</string>
     <string-array name="tipoDoc">
         <item>DNI</item>
         <item>RUC</item>

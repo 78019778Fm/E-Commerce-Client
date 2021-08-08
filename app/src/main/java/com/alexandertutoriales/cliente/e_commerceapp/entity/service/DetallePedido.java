@@ -46,4 +46,16 @@ public class DetallePedido {
     public void setPedido(Pedido pedido) {
         this.pedido = pedido;
     }
+
+    public void addOne() {
+        this.cantidad++;
+    }
+
+    public void removeOne() {
+        this.cantidad--;
+    }
+
+    public double getTotal() {
+        return this.cantidad * this.precio;
+    }
 }

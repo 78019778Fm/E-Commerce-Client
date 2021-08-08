@@ -1,5 +1,6 @@
 package com.alexandertutoriales.cliente.e_commerceapp.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -81,8 +82,17 @@ public class InicioActivity extends AppCompatActivity {
             case R.id.cerrarSesion:
                 this.logout();
                 break;
+            case R.id.bolsaCompras:
+                this.mostrarBolsa();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void mostrarBolsa() {
+        Intent i = new Intent(this, PlatillosCarritoActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
     @Override

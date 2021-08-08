@@ -1,5 +1,6 @@
 package com.alexandertutoriales.cliente.e_commerceapp.activity.ui.inicio;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.alexandertutoriales.cliente.e_commerceapp.R;
 import com.alexandertutoriales.cliente.e_commerceapp.adapter.CategoriaAdapter;
 import com.alexandertutoriales.cliente.e_commerceapp.adapter.PlatillosRecomendadosAdapter;
 import com.alexandertutoriales.cliente.e_commerceapp.adapter.SliderAdapter;
+import com.alexandertutoriales.cliente.e_commerceapp.communication.Communication;
 import com.alexandertutoriales.cliente.e_commerceapp.entity.SliderItem;
 import com.alexandertutoriales.cliente.e_commerceapp.entity.service.Platillo;
 import com.alexandertutoriales.cliente.e_commerceapp.viewmodel.CategoriaViewModel;
@@ -32,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class InicioFragment extends Fragment {
+public class InicioFragment extends Fragment implements Communication {
     private CategoriaViewModel categoriaViewModel;
     private PlatilloViewModel platilloViewModel;
     private RecyclerView rcvPlatillosRecomendados;
@@ -83,7 +85,7 @@ public class InicioFragment extends Fragment {
         categoriaAdapter = new CategoriaAdapter(getContext(), R.layout.item_categorias, new ArrayList<>());
         gvCategorias.setAdapter(categoriaAdapter);
         //Platillos
-        adapter = new PlatillosRecomendadosAdapter(platillos);
+        adapter = new PlatillosRecomendadosAdapter(platillos, this);
         rcvPlatillosRecomendados.setAdapter(adapter);
     }
     private void loadData() {
@@ -110,4 +112,9 @@ public class InicioFragment extends Fragment {
     }
 
 
+    @Override
+    public void showDetails(Intent i) {
+        getActivity().startActivity(i);
+        getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
+    }
 }

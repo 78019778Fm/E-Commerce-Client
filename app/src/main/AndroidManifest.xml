@@ -19,6 +19,12 @@
         android:theme="@style/Theme.ECommerceApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.PlatillosCarritoActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.DetallePlatilloActivity"
+            android:exported="true" />
+        <activity
             android:name=".activity.ui.compras.DetalleMisComprasActivity"
             android:exported="true" />
         <activity

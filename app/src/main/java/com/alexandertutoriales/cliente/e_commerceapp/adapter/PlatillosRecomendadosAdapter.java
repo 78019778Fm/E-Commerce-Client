@@ -1,5 +1,6 @@
 package com.alexandertutoriales.cliente.e_commerceapp.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +13,32 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexandertutoriales.cliente.e_commerceapp.R;
+import com.alexandertutoriales.cliente.e_commerceapp.activity.DetallePlatilloActivity;
 import com.alexandertutoriales.cliente.e_commerceapp.api.ConfigApi;
+import com.alexandertutoriales.cliente.e_commerceapp.communication.Communication;
+import com.alexandertutoriales.cliente.e_commerceapp.entity.service.DetallePedido;
 import com.alexandertutoriales.cliente.e_commerceapp.entity.service.Platillo;
+import com.alexandertutoriales.cliente.e_commerceapp.utils.Carrito;
+import com.alexandertutoriales.cliente.e_commerceapp.utils.DateSerializer;
+import com.alexandertutoriales.cliente.e_commerceapp.utils.TimeSerializer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class PlatillosRecomendadosAdapter extends RecyclerView.Adapter<PlatillosRecomendadosAdapter.ViewHolder> {
     private List<Platillo> platillos;
+    private final Communication communication;
 
-    public PlatillosRecomendadosAdapter(List<Platillo> platillos) {
+    public PlatillosRecomendadosAdapter(List<Platillo> platillos, Communication communication) {
         this.platillos = platillos;
+        this.communication = communication;
     }
 
     @NonNull
@@ -43,7 +58,7 @@ public class PlatillosRecomendadosAdapter extends RecyclerView.Adapter<Platillos
         return this.platillos.size();
     }
 
-    public void updateItems(List<Platillo> platillo){
+    public void updateItems(List<Platillo> platillo) {
         this.platillos.clear();
         this.platillos.addAll(platillo);
         this.notifyDataSetChanged();
@@ -71,8 +86,29 @@ public class PlatillosRecomendadosAdapter extends RecyclerView.Adapter<Platillos
                     .into(imgPlatillo);
             namePlatillo.setText(p.getNombre());
             btnOrdenar.setOnClickListener(v -> {
-                Toast.makeText(itemView.getContext(), "Hola, Mundo", Toast.LENGTH_SHORT).show();
+                DetallePedido detallePedido = new DetallePedido();
+                detallePedido.setPlatillo(p);
+                detallePedido.setCantidad(1);
+                detallePedido.setPrecio(p.getPrecio());
+                successMessage(Carrito.agregarPlatillos(detallePedido));
             });
+
+            //Inicializar la vista del detalle del platillo
+            itemView.setOnClickListener(v -> {
+                final Intent i = new Intent(itemView.getContext(), DetallePlatilloActivity.class);
+                final Gson g = new GsonBuilder()
+                        .registerTypeAdapter(Date.class, new DateSerializer())
+                        .registerTypeAdapter(Time.class, new TimeSerializer())
+                        .create();
+                i.putExtra("detallePlatillo", g.toJson(p));
+                communication.showDetails(i);
+            });
+        }
+
+        public void successMessage(String message) {
+            new SweetAlertDialog(itemView.getContext(),
+                    SweetAlertDialog.SUCCESS_TYPE).setTitleText("Buen Trabajo!")
+                    .setContentText(message).show();
         }
     }
 }
