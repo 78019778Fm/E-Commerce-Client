@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexandertutoriales.cliente.e_commerceapp.R;
 import com.alexandertutoriales.cliente.e_commerceapp.adapter.MisComprasAdapter;
+import com.alexandertutoriales.cliente.e_commerceapp.communication.AnularPedidoCommunication;
 import com.alexandertutoriales.cliente.e_commerceapp.communication.Communication;
 import com.alexandertutoriales.cliente.e_commerceapp.entity.service.Usuario;
 import com.alexandertutoriales.cliente.e_commerceapp.utils.DateSerializer;
@@ -30,7 +31,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 
 
-public class MisComprasFragment extends Fragment implements Communication {
+public class MisComprasFragment extends Fragment implements Communication , AnularPedidoCommunication {
     private PedidoViewModel pedidoViewModel;
     private RecyclerView rcvPedidos;
     private MisComprasAdapter adapter;
@@ -58,7 +59,7 @@ public class MisComprasFragment extends Fragment implements Communication {
     }
 
     private void initAdapter() {
-        adapter = new MisComprasAdapter(new ArrayList<>(), this);
+        adapter = new MisComprasAdapter(new ArrayList<>(), this, this);
         rcvPedidos.setLayoutManager(new GridLayoutManager(getContext(), 1));
         rcvPedidos.setAdapter(adapter);
     }
@@ -82,5 +83,15 @@ public class MisComprasFragment extends Fragment implements Communication {
     public void showDetails(Intent i) {
         getActivity().startActivity(i);
         getActivity().overridePendingTransition(R.anim.above_in, R.anim.above_out);
+    }
+
+    @Override
+    public String anularPedido(int id) {
+        this.pedidoViewModel.anularPedido(id).observe(getViewLifecycleOwner(), response -> {
+            if(response.getRpta() == 1){
+                loadData();
+            }
+        });
+        return "El pedido ha sido cancelado";
     }
 }

@@ -2,23 +2,29 @@ package com.alexandertutoriales.cliente.e_commerceapp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.View;
 
 import com.alexandertutoriales.cliente.e_commerceapp.R;
 import com.alexandertutoriales.cliente.e_commerceapp.adapter.PlatillosPorCategoriaAdapter;
+import com.alexandertutoriales.cliente.e_commerceapp.communication.MostrarBadgeCommunication;
+import com.alexandertutoriales.cliente.e_commerceapp.entity.service.DetallePedido;
 import com.alexandertutoriales.cliente.e_commerceapp.entity.service.Platillo;
+import com.alexandertutoriales.cliente.e_commerceapp.utils.Carrito;
 import com.alexandertutoriales.cliente.e_commerceapp.viewmodel.PlatilloViewModel;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.badge.BadgeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListarPlatillosPorCategoriaActivity extends AppCompatActivity {
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
+public class ListarPlatillosPorCategoriaActivity extends AppCompatActivity implements MostrarBadgeCommunication {
     private PlatilloViewModel platilloViewModel;
     private PlatillosPorCategoriaAdapter adapter;
     private List<Platillo> platillos = new ArrayList<>();
@@ -33,7 +39,8 @@ public class ListarPlatillosPorCategoriaActivity extends AppCompatActivity {
         initAdapter();
         loadData();
     }
-    private void init(){
+
+    private void init() {
         Toolbar toolbar = this.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_volver_atras);
         toolbar.setNavigationOnClickListener(v -> {
@@ -48,7 +55,7 @@ public class ListarPlatillosPorCategoriaActivity extends AppCompatActivity {
     }
 
     private void initAdapter() {
-        adapter = new PlatillosPorCategoriaAdapter(platillos);
+        adapter = new PlatillosPorCategoriaAdapter(platillos, this);
         rcvPlatilloPorCategoria = findViewById(R.id.rcvPlatillosPorCategoria);
         rcvPlatilloPorCategoria.setAdapter(adapter);
         rcvPlatilloPorCategoria.setLayoutManager(new LinearLayoutManager(this));
@@ -60,5 +67,20 @@ public class ListarPlatillosPorCategoriaActivity extends AppCompatActivity {
         platilloViewModel.listarPlatillosPorCategoria(idC).observe(this, response -> {
             adapter.updateItems(response.getBody());
         });
+    }
+
+    @SuppressLint("UnsafeExperimentalUsageError")
+    @Override
+    public void add(DetallePedido dp) {
+        successMessage(Carrito.agregarPlatillos(dp));
+        BadgeDrawable badgeDrawable = BadgeDrawable.create(this);
+        badgeDrawable.setNumber(Carrito.getDetallePedidos().size());
+        BadgeUtils.attachBadgeDrawable(badgeDrawable, findViewById(R.id.toolbar), R.id.bolsaCompras);
+    }
+
+    public void successMessage(String message) {
+        new SweetAlertDialog(this,
+                SweetAlertDialog.SUCCESS_TYPE).setTitleText("Buen Trabajo!")
+                .setContentText(message).show();
     }
 }

@@ -1,5 +1,6 @@
 package com.alexandertutoriales.cliente.e_commerceapp.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,8 +14,11 @@ import com.alexandertutoriales.cliente.e_commerceapp.R;
 import com.alexandertutoriales.cliente.e_commerceapp.api.ConfigApi;
 import com.alexandertutoriales.cliente.e_commerceapp.databinding.ActivityInicioBinding;
 import com.alexandertutoriales.cliente.e_commerceapp.entity.service.Usuario;
+import com.alexandertutoriales.cliente.e_commerceapp.utils.Carrito;
 import com.alexandertutoriales.cliente.e_commerceapp.utils.DateSerializer;
 import com.alexandertutoriales.cliente.e_commerceapp.utils.TimeSerializer;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.badge.BadgeUtils;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
@@ -101,6 +105,7 @@ public class InicioActivity extends AppCompatActivity {
         loadData();
     }
 
+    @SuppressLint("UnsafeExperimentalUsageError")
     private void loadData() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         final Gson g = new GsonBuilder()
@@ -124,6 +129,9 @@ public class InicioActivity extends AppCompatActivity {
                     .error(R.drawable.image_not_found)
                     .into(imgFoto);
         }
+        BadgeDrawable badgeDrawable = BadgeDrawable.create(this);
+        badgeDrawable.setNumber(Carrito.getDetallePedidos().size());
+        BadgeUtils.attachBadgeDrawable(badgeDrawable, findViewById(R.id.toolbar), R.id.bolsaCompras);
     }
 
     //Método para cerrar sesión

@@ -1,5 +1,6 @@
 package com.alexandertutoriales.cliente.e_commerceapp.activity.ui.inicio;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,10 +21,15 @@ import com.alexandertutoriales.cliente.e_commerceapp.adapter.CategoriaAdapter;
 import com.alexandertutoriales.cliente.e_commerceapp.adapter.PlatillosRecomendadosAdapter;
 import com.alexandertutoriales.cliente.e_commerceapp.adapter.SliderAdapter;
 import com.alexandertutoriales.cliente.e_commerceapp.communication.Communication;
+import com.alexandertutoriales.cliente.e_commerceapp.communication.MostrarBadgeCommunication;
 import com.alexandertutoriales.cliente.e_commerceapp.entity.SliderItem;
+import com.alexandertutoriales.cliente.e_commerceapp.entity.service.DetallePedido;
 import com.alexandertutoriales.cliente.e_commerceapp.entity.service.Platillo;
+import com.alexandertutoriales.cliente.e_commerceapp.utils.Carrito;
 import com.alexandertutoriales.cliente.e_commerceapp.viewmodel.CategoriaViewModel;
 import com.alexandertutoriales.cliente.e_commerceapp.viewmodel.PlatilloViewModel;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.badge.BadgeUtils;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
@@ -33,8 +39,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class InicioFragment extends Fragment implements Communication {
+
+public class InicioFragment extends Fragment implements Communication, MostrarBadgeCommunication {
     private CategoriaViewModel categoriaViewModel;
     private PlatilloViewModel platilloViewModel;
     private RecyclerView rcvPlatillosRecomendados;
@@ -85,7 +93,7 @@ public class InicioFragment extends Fragment implements Communication {
         categoriaAdapter = new CategoriaAdapter(getContext(), R.layout.item_categorias, new ArrayList<>());
         gvCategorias.setAdapter(categoriaAdapter);
         //Platillos
-        adapter = new PlatillosRecomendadosAdapter(platillos, this);
+        adapter = new PlatillosRecomendadosAdapter(platillos, this, this);
         rcvPlatillosRecomendados.setAdapter(adapter);
     }
     private void loadData() {
@@ -116,5 +124,19 @@ public class InicioFragment extends Fragment implements Communication {
     public void showDetails(Intent i) {
         getActivity().startActivity(i);
         getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
+    }
+
+    @SuppressLint("UnsafeExperimentalUsageError")
+    @Override
+    public void add(DetallePedido dp) {
+        successMessage(Carrito.agregarPlatillos(dp));
+        BadgeDrawable badgeDrawable = BadgeDrawable.create(this.getContext());
+        badgeDrawable.setNumber(Carrito.getDetallePedidos().size());
+        BadgeUtils.attachBadgeDrawable(badgeDrawable, getActivity().findViewById(R.id.toolbar), R.id.bolsaCompras);
+    }
+    public void successMessage(String message) {
+        new SweetAlertDialog(this.getContext(),
+                SweetAlertDialog.SUCCESS_TYPE).setTitleText("Buen Trabajo!")
+                .setContentText(message).show();
     }
 }

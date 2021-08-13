@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.alexandertutoriales.cliente.e_commerceapp.api.ConfigApi;
 import com.alexandertutoriales.cliente.e_commerceapp.api.PedidoApi;
 import com.alexandertutoriales.cliente.e_commerceapp.entity.GenericResponse;
+import com.alexandertutoriales.cliente.e_commerceapp.entity.service.Pedido;
 import com.alexandertutoriales.cliente.e_commerceapp.entity.service.dto.GenerarPedidoDTO;
 import com.alexandertutoriales.cliente.e_commerceapp.entity.service.dto.PedidoConDetallesDTO;
 
@@ -66,5 +67,24 @@ public class PedidoRepository {
             }
         });
         return data;
+    }
+    //ANULAR PEDIDO
+    public LiveData<GenericResponse<Pedido>> anularPedido(int id){
+        MutableLiveData<GenericResponse<Pedido>> mld = new MutableLiveData<>();
+        this.api.anularPedido(id).enqueue(new Callback<GenericResponse<Pedido>>() {
+            @Override
+            public void onResponse(Call<GenericResponse<Pedido>> call, Response<GenericResponse<Pedido>> response) {
+                if(response.isSuccessful()){
+                    mld.setValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GenericResponse<Pedido>> call, Throwable t) {
+                mld.setValue(new GenericResponse<>());
+                t.printStackTrace();
+            }
+        });
+        return mld;
     }
 }

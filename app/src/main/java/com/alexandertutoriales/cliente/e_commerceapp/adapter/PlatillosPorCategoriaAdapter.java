@@ -6,13 +6,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexandertutoriales.cliente.e_commerceapp.R;
 import com.alexandertutoriales.cliente.e_commerceapp.api.ConfigApi;
+import com.alexandertutoriales.cliente.e_commerceapp.communication.MostrarBadgeCommunication;
+import com.alexandertutoriales.cliente.e_commerceapp.entity.service.DetallePedido;
 import com.alexandertutoriales.cliente.e_commerceapp.entity.service.Platillo;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
@@ -22,9 +23,11 @@ import java.util.Locale;
 
 public class PlatillosPorCategoriaAdapter extends RecyclerView.Adapter<PlatillosPorCategoriaAdapter.ViewHolder> {
     private List<Platillo> listadoPlatilloPorCategoria;
+    private final MostrarBadgeCommunication mostrarBadgeCommunication;
 
-    public PlatillosPorCategoriaAdapter(List<Platillo> listadoPlatilloPorCategoria) {
+    public PlatillosPorCategoriaAdapter(List<Platillo> listadoPlatilloPorCategoria, MostrarBadgeCommunication mostrarBadgeCommunication) {
         this.listadoPlatilloPorCategoria = listadoPlatilloPorCategoria;
+        this.mostrarBadgeCommunication = mostrarBadgeCommunication;
     }
 
     @NonNull
@@ -75,7 +78,11 @@ public class PlatillosPorCategoriaAdapter extends RecyclerView.Adapter<Platillos
             namePlatilloC.setText(p.getNombre());
             txtPricePlatilloC.setText(String.format(Locale.ENGLISH, "S/%.2f", p.getPrecio()));
             btnOrdenarPC.setOnClickListener(v -> {
-                Toast.makeText(this.itemView.getContext(), "Haz presionado el boton ordenar", Toast.LENGTH_SHORT).show();
+                DetallePedido detallePedido = new DetallePedido();
+                detallePedido.setPlatillo(p);
+                detallePedido.setCantidad(1);
+                detallePedido.setPrecio(p.getPrecio());
+                mostrarBadgeCommunication.add(detallePedido);
             });
         }
     }

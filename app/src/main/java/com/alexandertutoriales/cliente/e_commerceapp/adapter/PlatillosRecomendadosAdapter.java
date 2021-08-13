@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +15,7 @@ import com.alexandertutoriales.cliente.e_commerceapp.R;
 import com.alexandertutoriales.cliente.e_commerceapp.activity.DetallePlatilloActivity;
 import com.alexandertutoriales.cliente.e_commerceapp.api.ConfigApi;
 import com.alexandertutoriales.cliente.e_commerceapp.communication.Communication;
+import com.alexandertutoriales.cliente.e_commerceapp.communication.MostrarBadgeCommunication;
 import com.alexandertutoriales.cliente.e_commerceapp.entity.service.DetallePedido;
 import com.alexandertutoriales.cliente.e_commerceapp.entity.service.Platillo;
 import com.alexandertutoriales.cliente.e_commerceapp.utils.Carrito;
@@ -35,10 +35,12 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class PlatillosRecomendadosAdapter extends RecyclerView.Adapter<PlatillosRecomendadosAdapter.ViewHolder> {
     private List<Platillo> platillos;
     private final Communication communication;
+    private final MostrarBadgeCommunication mostrarBadgeCommunication;
 
-    public PlatillosRecomendadosAdapter(List<Platillo> platillos, Communication communication) {
+    public PlatillosRecomendadosAdapter(List<Platillo> platillos, Communication communication, MostrarBadgeCommunication mostrarBadgeCommunication) {
         this.platillos = platillos;
         this.communication = communication;
+        this.mostrarBadgeCommunication = mostrarBadgeCommunication;
     }
 
     @NonNull
@@ -90,7 +92,8 @@ public class PlatillosRecomendadosAdapter extends RecyclerView.Adapter<Platillos
                 detallePedido.setPlatillo(p);
                 detallePedido.setCantidad(1);
                 detallePedido.setPrecio(p.getPrecio());
-                successMessage(Carrito.agregarPlatillos(detallePedido));
+                mostrarBadgeCommunication.add(detallePedido);
+                //successMessage(Carrito.agregarPlatillos(detallePedido));
             });
 
             //Inicializar la vista del detalle del platillo
