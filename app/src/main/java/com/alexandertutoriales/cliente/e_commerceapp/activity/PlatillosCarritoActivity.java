@@ -69,8 +69,12 @@ public class PlatillosCarritoActivity extends AppCompatActivity implements Carri
             Usuario u = g.fromJson(pref, Usuario.class);
             int idC = u.getCliente().getId();
             if (idC != 0) {
-                toastCorrecto("Hay un Usuario en sesion, registrando venta...");
-                registrarPedido(idC);
+                if (Carrito.getDetallePedidos().isEmpty()) {
+                    toastIncorrecto("¡Ups!, La bolsa de compras está vacia.");
+                } else {
+                    toastCorrecto("Procesando pedido...");
+                    registrarPedido(idC);
+                }
             } else {
                 toastIncorrecto("No ha iniciado sesión, se le redirigirá al login");
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));

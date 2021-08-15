@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class PlatilloCarritoAdapter extends RecyclerView.Adapter<PlatilloCarritoAdapter.ViewHolder> {
     private final List<DetallePedido> detalles;
     private final CarritoCommunication c;
@@ -79,12 +81,8 @@ public class PlatilloCarritoAdapter extends RecyclerView.Adapter<PlatilloCarrito
             picasso.load(url)
                     .error(R.drawable.image_not_found)
                     .into(this.imgPlatilloDC);
-            //Eliminar item del carrito
-            this.btnEliminarPCarrito.setOnClickListener(v -> {
-                toastCorrecto("Platillo eliminado exitosamente");
-                c.eliminarDetalle(dp.getPlatillo().getId());
-            });
-            //Actualizar Cantidad del Carrito
+
+            //-------------Actualizar Cantidad del Carrito-------------------------
             btnAdd.setOnClickListener(v -> {
                 if (dp.getCantidad() != 10) {//Si el valor todavía no llega a 10, que siga aumentando
                     dp.addOne();
@@ -96,6 +94,13 @@ public class PlatilloCarritoAdapter extends RecyclerView.Adapter<PlatilloCarrito
                     dp.removeOne();
                     PlatilloCarritoAdapter.this.notifyDataSetChanged();
                 }
+            });
+
+            //------------------Eliminar item del carrito-----------------------
+            this.btnEliminarPCarrito.setOnClickListener(v -> {
+                /*toastCorrecto("Platillo eliminado exitosamente");
+                c.eliminarDetalle(dp.getPlatillo().getId());*/
+                showMsg(dp.getPlatillo().getId());
             });
         }
 
@@ -110,6 +115,23 @@ public class PlatilloCarritoAdapter extends RecyclerView.Adapter<PlatilloCarrito
             toast.setDuration(Toast.LENGTH_LONG);
             toast.setView(layouView);
             toast.show();
+        }
+        private void showMsg(int idPlatillo) {
+            new SweetAlertDialog(itemView.getContext(), SweetAlertDialog.WARNING_TYPE).setTitleText("Aviso del sistema !")
+                    .setContentText("¿Estás seguro de eliminar el producto de tu bolsa de compras?")
+                    .setCancelText("No, Cancelar!").setConfirmText("Sí, Confirmar")
+                    .showCancelButton(true).setCancelClickListener(sDialog -> {
+                sDialog.dismissWithAnimation();
+                new SweetAlertDialog(itemView.getContext(), SweetAlertDialog.ERROR_TYPE).setTitleText("Operación cancelada")
+                        .setContentText("No eliminaste ningún platillo de tu bolsa de compras")
+                        .show();
+            }).setConfirmClickListener(sweetAlertDialog -> {
+                c.eliminarDetalle(idPlatillo);
+                sweetAlertDialog.dismissWithAnimation();
+                new SweetAlertDialog(itemView.getContext(), SweetAlertDialog.SUCCESS_TYPE).setTitleText("Buen Trabajo !")
+                        .setContentText("Excelente, el platillo acaba de ser eliminado de tu bolsa de compras")
+                        .show();
+            }).show();
         }
     }
 }
