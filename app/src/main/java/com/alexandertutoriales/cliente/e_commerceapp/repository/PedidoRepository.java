@@ -1,5 +1,11 @@
 package com.alexandertutoriales.cliente.e_commerceapp.repository;
 
+import static com.alexandertutoriales.cliente.e_commerceapp.utils.Global.OPERACION_CORRECTA;
+import static com.alexandertutoriales.cliente.e_commerceapp.utils.Global.RPTA_OK;
+import static com.alexandertutoriales.cliente.e_commerceapp.utils.Global.TIPO_DATA;
+
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -12,6 +18,7 @@ import com.alexandertutoriales.cliente.e_commerceapp.entity.service.dto.PedidoCo
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -82,6 +89,30 @@ public class PedidoRepository {
             @Override
             public void onFailure(Call<GenericResponse<Pedido>> call, Throwable t) {
                 mld.setValue(new GenericResponse<>());
+                t.printStackTrace();
+            }
+        });
+        return mld;
+    }
+    /**
+     * Este método devuelve el reporte PDF de la compra realizada
+     * @param idCli
+     * @param idOrden
+     */
+    public LiveData<GenericResponse<ResponseBody>> exportInvoice(int idCli, int idOrden){
+        MutableLiveData<GenericResponse<ResponseBody>> mld = new MutableLiveData<>();
+        this.api.exportInvoicePDF(idCli, idOrden).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    mld.setValue(new GenericResponse<>(TIPO_DATA, RPTA_OK, OPERACION_CORRECTA, response.body()));
+                    Log.e("exportInvoice", "file recived");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("exportInvoice", t.getMessage());
                 t.printStackTrace();
             }
         });

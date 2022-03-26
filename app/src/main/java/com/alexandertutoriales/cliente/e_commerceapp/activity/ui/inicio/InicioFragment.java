@@ -126,6 +126,11 @@ public class InicioFragment extends Fragment implements Communication, MostrarBa
         getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
+    @Override
+    public void exportInvoice(int idCli, int idOrden, String fileName) {
+
+    }
+
     @SuppressLint("UnsafeExperimentalUsageError")
     @Override
     public void add(DetallePedido dp) {

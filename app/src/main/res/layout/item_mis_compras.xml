@@ -131,6 +131,18 @@
                         android:textColor="#F4EDED"
                         android:textSize="15sp" />
                 </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <Button
+                        android:id="@+id/btnExportInvoice"
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="Descargar Factura"
+                        android:drawableEnd="@drawable/ic_baseline_arrow_downward_24"/>
+                </RelativeLayout>
             </LinearLayout>
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>

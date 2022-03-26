@@ -19,6 +19,9 @@
         android:theme="@style/Theme.ECommerceApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.VerInvoiceActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.PlatillosCarritoActivity"
             android:exported="true" />
         <activity

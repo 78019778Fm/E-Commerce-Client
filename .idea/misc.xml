@@ -24,10 +24,14 @@
         <entry key="..\:/Users/USER/Desktop/Youtube-Project-E-Commerce/AppCliente/app/src/main/res/layout/item_platillos_por_categoria.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/USER/Desktop/Youtube-Project-E-Commerce/AppCliente/app/src/main/res/menu/inicio.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/USER/Desktop/Youtube-Project-E-Commerce/AppCliente/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1125" />
+        <entry key="..\:/Users/lfuenmed/OneDrive - NTT DATA EMEAL/Documentos/Proyecto-Ecommerce_(App + Web Service)/E-Commerce-Client/app/src/main/res/drawable/ic_download.xml" value="0.188" />
+        <entry key="..\:/Users/lfuenmed/OneDrive - NTT DATA EMEAL/Documentos/Proyecto-Ecommerce_(App + Web Service)/E-Commerce-Client/app/src/main/res/layout/activity_ver_invoice.xml" value="0.176" />
+        <entry key="..\:/Users/lfuenmed/OneDrive - NTT DATA EMEAL/Documentos/Proyecto-Ecommerce_(App + Web Service)/E-Commerce-Client/app/src/main/res/layout/item_mis_compras.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/lfuenmed/OneDrive - NTT DATA EMEAL/Documentos/Proyecto-Ecommerce_(App + Web Service)/E-Commerce-Client/app/src/main/res/layout/item_platillos.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -70,6 +71,7 @@ public class MisComprasAdapter extends RecyclerView.Adapter<MisComprasAdapter.Vi
                     txtValueDatePurchases = this.itemView.findViewById(R.id.txtValueDatePurchases),
                     txtValueAmount = this.itemView.findViewById(R.id.txtValueAmount),
                     txtValueOrder = this.itemView.findViewById(R.id.txtValueOrder);
+            final Button btnExportInvoice = this.itemView.findViewById(R.id.btnExportInvoice);
             txtValueCodPurchases.setText("C000" + Integer.toString(dto.getPedido().getId()));
             txtValueDatePurchases.setText((dto.getPedido().getFechaCompra()).toString());
             txtValueAmount.setText(String.format(Locale.ENGLISH, "S/%.2f", dto.getPedido().getMonto()));
@@ -90,6 +92,12 @@ public class MisComprasAdapter extends RecyclerView.Adapter<MisComprasAdapter.Vi
                     anularPedido(dto.getPedido().getId());
                     return true;
                 }
+            });
+            btnExportInvoice.setOnClickListener(view -> {
+                int idCli = dto.getPedido().getCliente().getId();
+                int idOrden = dto.getPedido().getId();
+                String fileName = "Invoice" + "00" + dto.getPedido().getId() + ".pdf";
+                communication.exportInvoice(idCli, idOrden, fileName);
             });
         }
         private void anularPedido(int id) {
